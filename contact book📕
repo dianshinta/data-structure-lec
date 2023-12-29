@@ -865,6 +865,7 @@ int main(){
                         
                         
                         if(wildcardOrNo == 'Y'){
+                            printf("\n(Mohon jangan tekan tombol SPASI sebelum tanda '*')");
                             printf("\nMasukkan nama yang ingin dicari: ");
                             scanf("%s", namaDicari);
                             namaDicari[strcspn(namaDicari, "\n")] = '\0';
@@ -898,6 +899,7 @@ int main(){
                         wildcardOrNo = toupper(wildcardOrNo);
                         
                         if(wildcardOrNo == 'Y'){
+                            printf("\n(Mohon jangan tekan tombol SPASI sebelum tanda '*')");
                             printf("\nMasukkan nomor telepon yang ingin dicari: ");
                             scanf("%s", noTelpDicari);
                             noTelpDicari[strcspn(noTelpDicari, "\n")] = '\0';
@@ -928,6 +930,7 @@ int main(){
                         wildcardOrNo = toupper(wildcardOrNo);
                         
                         if(wildcardOrNo == 'Y'){
+                            printf("\n(Mohon jangan tekan tombol SPASI sebelum tanda '*')");
                             printf("\nMasukkan email yang ingin dicari: ");
                             scanf("%s", emailDicari);
                             emailDicari[strcspn(emailDicari, "\n")] = '\0';
