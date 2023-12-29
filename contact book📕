@@ -1,0 +1,1155 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <conio.h>
+
+struct ContactBook{
+    char contactid[5];
+    char name[50];
+    int age;
+    char gender;
+    char telNo[13];
+    char email[40];
+    struct ContactBook *next;
+};
+
+typedef struct ContactBook *ptrnode;
+
+ptrnode createNode(char newContactid[5], char newName[50], int newAge, 
+char newGender, char newTelNo[13], char newEmail[40]){
+    ptrnode new;
+    new = (ptrnode)malloc(sizeof(struct ContactBook));
+    strcpy(new->contactid, newContactid);
+    strcpy(new->name, newName);
+    new->age = newAge;
+    new->gender = newGender;
+    strcpy(new->telNo, newTelNo);
+    strcpy(new->email, newEmail);
+    new->next = NULL;
+    
+    return new;
+}
+
+ptrnode insertData(ptrnode head, char newContactid[5], char newName[50], 
+int newAge, char newGender, char newTelNo[13], char newEmail[40]){
+    ptrnode tail = head;
+    ptrnode newData = createNode(newContactid, newName, newAge, newGender, newTelNo, newEmail);
+    
+    if(head == NULL){
+        head = newData;
+    }
+    else{
+        while(tail->next != NULL){
+            tail = tail->next;
+        }
+        tail->next = newData;
+    }
+    
+    return head;
+}
+
+void searchDatabyId(ptrnode* head, char searchedId[5]){
+    ptrnode tmp = *head;
+    while(tmp != NULL){
+        if(strcmp(tmp->contactid, searchedId) == 0){
+            printf("\nId Kontak: %s", tmp->contactid);
+            printf("\nNama: %s", tmp->name);
+            printf("\nUmur: %d\n", tmp->age);
+            printf("Jenis Kelamin: %c\n", tmp->gender);
+            printf("No Telepon: %s\n", tmp->telNo);
+            printf("Email: %s\n", tmp->email);
+            return;
+        }
+        else
+            tmp = tmp->next;
+    }
+    printf("Kontak tidak ditemukan.");
+}
+
+void searchDatabyName(ptrnode* head, char searchedName[50]){
+    ptrnode tmp = *head;
+    searchedName[strcspn(searchedName, "\n")] = '\0';
+
+    while(tmp != NULL){
+        if(strcmp(tmp->name, searchedName) == 0){
+            printf("\nId Kontak: %s", tmp->contactid);
+            printf("\nNama: %s", tmp->name);
+            printf("\nUmur: %d\n", tmp->age);
+            printf("Jenis Kelamin: %c\n", tmp->gender);
+            printf("No Telepon: %s\n", tmp->telNo);
+            printf("Email: %s\n", tmp->email);
+            return;
+        }
+        else{
+            tmp = tmp->next;
+        }
+    }
+    printf("Kontak tidak ditemukan.");
+        
+}
+
+void searchDatabyTelNo(ptrnode* head, char searchedTelNo[13]){
+    searchedTelNo[strcspn(searchedTelNo, "\n")] = '\0';
+    
+    ptrnode tmp = *head;
+    tmp->telNo[strcspn(tmp->telNo, "\n")] = '\0';
+
+    while(tmp != NULL){
+        if(strcmp(tmp->telNo, searchedTelNo) == 0){
+            printf("\nId Kontak: %s", tmp->contactid);
+            printf("\nNama: %s", tmp->name);
+            printf("\nUmur: %d\n", tmp->age);
+            printf("Jenis Kelamin: %c\n", tmp->gender);
+            printf("No Telepon: %s\n", tmp->telNo);
+            printf("Email: %s\n", tmp->email);
+            return;
+        }
+        else{
+            tmp = tmp->next;
+        }
+    }
+    printf("Kontak tidak ditemukan.");
+}
+
+void searchDatabyEmail(ptrnode* head, char searchedEmail[40]){
+    searchedEmail[strcspn(searchedEmail, "\n")] = '\0';
+    ptrnode tmp = *head;
+    while(tmp != NULL){
+        if(strcmp(tmp->email, searchedEmail) == 0){
+            printf("\nId Kontak: %s", tmp->contactid);
+            printf("\nNama: %s", tmp->name);
+            printf("\nUmur: %d\n", tmp->age);
+            printf("Jenis Kelamin: %c\n", tmp->gender);
+            printf("No Telepon: %s\n", tmp->telNo);
+            printf("Email: %s\n", tmp->email);
+            return;
+        }
+        else{
+            tmp = tmp->next;
+        }
+    }
+    printf("Kontak tidak ditemukan.");
+}
+
+void deleteDataById(ptrnode* head, char id[5]){
+    ptrnode current = *head;
+    ptrnode prev = NULL;
+    char confirm;
+    
+    if (current != NULL && strcmp(current->contactid, id) == 0) {
+        *head = current->next;  
+        free(current);      
+        printf("Kontak berhasil dihapus.\n");
+        return;
+    }
+
+    while (current != NULL && strcmp(current->contactid, id) != 0) {
+        prev = current;
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        printf("Kontak tidak ditemukan.\n");
+        return;
+    }
+
+    prev->next = current->next;
+    printf("Kontak berhasil dihapus.\n");
+    free(current);
+}
+
+void deleteDataByName(ptrnode* head, char name[50]){
+    ptrnode current = *head;
+    ptrnode prev = NULL;
+    name[strcspn(name, "\n")] = '\0';
+    current->name[strcspn(current->name, "\n")] = '\0';
+    if (current != NULL && strcmp(current->name, name) == 0) {
+        *head = current->next;  
+        free(current);       
+        printf("Kontak berhasil dihapus.\n");
+        return;
+    }
+
+    while (current != NULL && strcmp(current->name, name) != 0) {
+        prev = current;
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        printf("Kontak tidak ditemukan.\n");
+        return;
+    }
+
+    prev->next = current->next;
+    printf("Kontak berhasil dihapus.\n");
+    free(current);
+}
+
+void deleteDataByTelNo(ptrnode* head, char telNo[13]){
+    ptrnode current = *head;
+    ptrnode prev = NULL;
+
+    if (current != NULL && strcmp(current->telNo, telNo) == 0) {
+        *head = current->next;  
+        free(current);      
+        printf("Kontak berhasil dihapus.\n");
+        return;
+    }
+
+    while (current != NULL && strcmp(current->telNo, telNo) != 0) {
+        prev = current;
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        printf("Kontak tidak ditemukan.\n");
+        return;
+    }
+
+    prev->next = current->next;
+    printf("Kontak berhasil dihapus.\n");
+    free(current);
+}
+
+void deleteDataByEmail(ptrnode* head, char email[40]) {
+    ptrnode current = *head;
+    ptrnode prev = NULL;
+
+    if (current != NULL && strcmp(current->email, email) == 0) {
+        *head = current->next;  
+        free(current); 
+        printf("Kontak berhasil dihapus.\n");
+        return;
+    }
+
+    while (current != NULL && strcmp(current->email, email) != 0) {
+        prev = current;
+        current = current->next;
+    }
+
+    if (current == NULL) {
+        printf("Kontak tidak ditemukan.\n");
+        return;
+    }
+
+    prev->next = current->next;
+
+    free(current);
+    printf("Kontak berhasil dihapus.\n");
+}
+
+void editName(ptrnode *head, char newName[50]){
+    ptrnode p = *head;
+    strcpy(p->name, newName);
+    p->name[strcspn(p->name, "\n")] = '\0';
+    printf("Nama telah diubah.\n");
+}
+
+void editAge(ptrnode *head, int newAge){
+    ptrnode p = *head;
+    p->age = newAge;
+    printf("Umur telah diubah.\n");
+}
+
+void editGender(ptrnode *head, char newGender){
+    ptrnode p = *head;
+    p->gender = newGender;
+    printf("Jenis kelamin telah diubah.\n");
+}
+
+void editTelNo(ptrnode *head, char newTelNo[13]){
+    ptrnode p = *head;
+    strcpy(p->telNo, newTelNo);
+    printf("Nomor telepon telah diubah.\n");
+}
+
+void editEmail(ptrnode *head, char newEmail[40]){
+    ptrnode p = *head;
+    strcpy(p->email, newEmail);
+    printf("Email telah diubah.\n");
+}
+
+void sortedInsertByAgeAsc(ptrnode *headRef, ptrnode newNode) {
+    ptrnode current;
+
+    if (*headRef == NULL || (*headRef)->age >= newNode->age) {
+        newNode->next = *headRef;
+        *headRef = newNode;
+    } else {
+        current = *headRef;
+        while (current->next != NULL && current->next->age < newNode->age) {
+            current = current->next;
+        }
+
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+void sortedInsertByAgeDesc(ptrnode *headRef, ptrnode newNode) {
+    ptrnode current;
+
+    if (*headRef == NULL || (*headRef)->age <= newNode->age) {
+        newNode->next = *headRef;
+        *headRef = newNode;
+    } else {
+        current = *headRef;
+        while (current->next != NULL && current->next->age > newNode->age) {
+            current = current->next;
+        }
+
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+void insertionSortByAgeAsc(ptrnode *headRef) {
+    ptrnode sorted = NULL;
+    ptrnode current = *headRef;
+
+    while (current != NULL) {
+        ptrnode next = current->next;
+
+        sortedInsertByAgeAsc(&sorted, current);
+
+        current = next;
+    }
+
+    *headRef = sorted;
+    printf("Kontak telah diurutkan.\n");
+}
+
+void insertionSortByAgeDesc(ptrnode *headRef) {
+    ptrnode sorted = NULL;
+    ptrnode current = *headRef;
+
+    while (current != NULL) {
+        ptrnode next = current->next;
+
+        sortedInsertByAgeDesc(&sorted, current);
+
+        current = next;
+    }
+
+    *headRef = sorted;
+    printf("Kontak telah diurutkan.\n");
+}
+
+void sortedInsertByNameAsc(ptrnode *headRef, ptrnode newNode) {
+    ptrnode current;
+
+    if (*headRef == NULL || strcmp((*headRef)->name, newNode->name) >= 0) {
+        newNode->next = *headRef;
+        *headRef = newNode;
+    } else {
+        current = *headRef;
+        while (current->next != NULL && strcmp(current->next->name, newNode->name) < 0) {
+            current = current->next;
+        }
+
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+void insertionSortByNameAsc(ptrnode *headRef) {
+    ptrnode sorted = NULL;
+    ptrnode current = *headRef;
+
+    while (current != NULL) {
+        ptrnode next = current->next;
+
+        sortedInsertByNameAsc(&sorted, current);
+
+        current = next;
+    }
+
+    *headRef = sorted;
+    printf("Kontak telah diurutkan.\n");
+}
+
+void sortedInsertByNameDesc(ptrnode *headRef, ptrnode newNode) {
+    ptrnode current;
+
+    if (*headRef == NULL || strcmp((*headRef)->name, newNode->name) <= 0) {
+        newNode->next = *headRef;
+        *headRef = newNode;
+    } else {
+        current = *headRef;
+        while (current->next != NULL && strcmp(current->next->name, newNode->name) > 0) {
+            current = current->next;
+        }
+
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+void insertionSortByNameDesc(ptrnode *headRef) {
+    ptrnode sorted = NULL;
+    ptrnode current = *headRef;
+
+    while (current != NULL) {
+        ptrnode next = current->next;
+
+        sortedInsertByNameDesc(&sorted, current);
+
+        current = next;
+    }
+
+    *headRef = sorted;
+    printf("Kontak telah diurutkan.\n");
+}
+
+void sortedInsertByContactIDAsc(ptrnode *headRef, ptrnode newNode) {
+    ptrnode current;
+
+    if (*headRef == NULL || strcmp((*headRef)->contactid, newNode->contactid) >= 0) {
+        newNode->next = *headRef;
+        *headRef = newNode;
+    } else {
+        current = *headRef;
+        while (current->next != NULL && strcmp(current->next->contactid, newNode->contactid) < 0) {
+            current = current->next;
+        }
+
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+void insertionSortByContactIDAsc(ptrnode *headRef) {
+    ptrnode sorted = NULL;
+    ptrnode current = *headRef;
+
+    while (current != NULL) {
+        ptrnode next = current->next;
+
+        sortedInsertByContactIDAsc(&sorted, current);
+
+        current = next;
+    }
+
+    *headRef = sorted;
+    printf("Kontak telah diurutkan.\n");
+}
+
+void sortedInsertByContactIDDesc(ptrnode *headRef, ptrnode newNode) {
+    ptrnode current;
+
+if (*headRef == NULL || strcmp((*headRef)->contactid, newNode->contactid) <= 0) {
+        newNode->next = *headRef;
+        *headRef = newNode;
+    } else {
+    current = *headRef;
+        while (current->next != NULL && strcmp(current->next->contactid, newNode->contactid) > 0) {
+            current = current->next;
+        }
+
+    newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+void insertionSortByContactIDDesc(ptrnode *headRef) {
+    ptrnode sorted = NULL;
+    ptrnode current = *headRef;
+
+    while(current != NULL) {
+        ptrnode next = current->next;
+    
+        sortedInsertByContactIDDesc(&sorted, current);
+    
+        current = next;
+        }
+    
+    *headRef = sorted;
+    printf("Kontak telah diurutkan.\n");
+}
+
+void sortedInsertByGenderAsc(ptrnode *headRef, ptrnode newNode) {
+    ptrnode current;
+
+    if (*headRef == NULL || (*headRef)->gender >= newNode->gender) {
+        newNode->next = *headRef;
+        *headRef = newNode;
+    } else {
+        current = *headRef;
+        while(current->next != NULL && current->next->gender < newNode->gender){
+            current = current->next;
+        }
+
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+void insertionSortByGenderAsc(ptrnode *headRef) {
+    ptrnode sorted = NULL;
+    ptrnode current = *headRef;
+
+    while (current != NULL) {
+        ptrnode next = current->next;
+    
+        sortedInsertByGenderAsc(&sorted, current);
+    
+        current = next;
+    }
+    
+    *headRef = sorted;
+    printf("Kontak telah diurutkan.\n");
+}
+
+void sortedInsertByGenderDesc(ptrnode *headRef, ptrnode newNode) {
+    ptrnode current;
+
+    if (*headRef == NULL || (*headRef)->gender <= newNode->gender) {
+            newNode->next = *headRef;
+            *headRef = newNode;
+    }
+    else{
+        current = *headRef;
+        while (current->next != NULL && current->next->gender > newNode->gender){
+            current = current->next;
+        }
+
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+void insertionSortByGenderDesc(ptrnode *headRef) {
+    ptrnode sorted = NULL;
+    ptrnode current = *headRef;
+
+    while (current != NULL) {
+        ptrnode next = current->next;
+    
+        sortedInsertByGenderDesc(&sorted, current);
+    
+        current = next;
+    }
+
+    *headRef = sorted;
+    printf("Kontak telah diurutkan.\n");
+}
+
+void sortedInsertByTelNoAsc(ptrnode *headRef, ptrnode newNode) {
+    ptrnode current;
+
+    if (*headRef == NULL || strcmp((*headRef)->telNo, newNode->telNo) >= 0) {
+        newNode->next = *headRef;
+        *headRef = newNode;
+    } 
+    else {
+        current = *headRef;
+        while (current->next != NULL && strcmp(current->next->telNo, newNode->telNo) < 0) {
+            current = current->next;
+        }
+
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+void insertionSortByTelNoAsc(ptrnode *headRef) {
+    ptrnode sorted = NULL;
+    ptrnode current = *headRef;
+
+    while (current != NULL) {
+        ptrnode next = current->next;
+    
+        sortedInsertByTelNoAsc(&sorted, current);
+    
+        current = next;
+    }
+
+    *headRef = sorted;
+    printf("Kontak telah diurutkan.\n");
+}
+
+void sortedInsertByTelNoDesc(ptrnode *headRef, ptrnode newNode) {
+    ptrnode current;
+
+    if (*headRef == NULL || strcmp((*headRef)->telNo, newNode->telNo) <= 0) {
+        newNode->next = *headRef;
+        *headRef = newNode;
+    } 
+    else {
+        current = *headRef;
+        while (current->next != NULL && strcmp(current->next->telNo, newNode->telNo) > 0) {
+            current = current->next;
+        }
+
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+void insertionSortByTelNoDesc(ptrnode *headRef) {
+    ptrnode sorted = NULL;
+    ptrnode current = *headRef;
+
+    while (current != NULL) {
+        ptrnode next = current->next;
+    
+        sortedInsertByTelNoDesc(&sorted, current);
+    
+        current = next;
+    }
+
+    *headRef = sorted;
+    printf("Kontak telah diurutkan.\n");
+}
+
+void sortedInsertByEmailAsc(ptrnode *headRef, ptrnode newNode) {
+    ptrnode current;
+
+    if (*headRef == NULL || strcmp((*headRef)->email, newNode->email) >= 0) {
+        newNode->next = *headRef;
+        *headRef = newNode;
+    } 
+    else {
+        current = *headRef;
+        while (current->next != NULL && strcmp(current->next->email, newNode->email) < 0) {
+            current = current->next;
+        }
+
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+void insertionSortByEmailAsc(ptrnode *headRef) {
+    ptrnode sorted = NULL;
+    ptrnode current = *headRef;
+
+    while (current != NULL) {
+        ptrnode next = current->next;
+
+        sortedInsertByEmailAsc(&sorted, current);
+    
+        current = next;
+    }
+
+    *headRef = sorted;
+    printf("Kontak telah diurutkan.\n");
+}
+
+void sortedInsertByEmailDesc(ptrnode *headRef, ptrnode newNode) {
+    ptrnode current;
+
+    if (*headRef == NULL || strcmp((*headRef)->email, newNode->email) <= 0) {
+        newNode->next = *headRef;
+        *headRef = newNode;
+    } 
+    else {
+        current = *headRef;
+        while (current->next != NULL && strcmp(current->next->email, newNode->email) > 0) {
+            current = current->next;
+        }
+
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+void insertionSortByEmailDesc(ptrnode *headRef) {
+    ptrnode sorted = NULL;
+    ptrnode current = *headRef;
+
+    while (current != NULL) {
+        ptrnode next = current->next;
+    
+        sortedInsertByEmailDesc(&sorted, current);
+    
+        current = next;
+    }
+    
+    *headRef = sorted;
+    printf("Kontak telah diurutkan.\n");
+}
+
+void wildcardSearchName(ptrnode* head, char searchedName[50]){
+    ptrnode w = *head;
+    char nameWild[50];
+    int found = 0;
+    searchedName[strcspn(searchedName, "*")] = '\0';
+    w->name[strcspn(w->name, "\n")] = '\0';
+    
+    while(w != NULL){
+        for(int i = 0; i < strlen(searchedName); i++){
+            nameWild[i] = w->name[i];
+        }
+        
+        if(strcmp(searchedName, nameWild) == 0){
+            found = 1;
+            printf("\nID Kontak: %s", w->contactid);
+            printf("\nNama: %s", w->name);
+            printf("\nUmur: %d", w->age);
+            printf("\nJenis Kelamin: %c", w->gender);
+            printf("\nNo Telepon: %s", w->telNo);
+            printf("\nEmail: %s\n", w->email);
+        }
+        
+        w = w->next;
+    }
+    
+    if(!found)
+        printf("Kontak tidak ditemukan.");
+}
+
+void wildcardSearchTelNo(ptrnode* head, char searchedTelNo[13]){
+    ptrnode w = *head;
+    char telNoWild[13];
+    int found = 0;
+    searchedTelNo[strcspn(searchedTelNo, "*")] = '\0';
+    
+    while(w != NULL){
+        for(int i = 0; i < strlen(searchedTelNo); i++){
+            telNoWild[i] = w->telNo[i];
+        }
+        
+        if(strcmp(searchedTelNo, telNoWild) == 0){
+            found = 1;
+            printf("\nID Kontak: %s", w->contactid);
+            printf("\nNama: %s", w->name);
+            printf("\nUmur: %d", w->age);
+            printf("\nJenis Kelamin: %c", w->gender);
+            printf("\nNo Telepon: %s", w->telNo);
+            printf("\nEmail: %s\n", w->email);
+        }
+       
+        w = w->next;
+    }
+    
+    if(!found)
+        printf("Kontak tidak ditemukan.");
+}
+
+void wildcardSearchEmail(ptrnode* head, char searchedEmail[40]){
+    ptrnode w = *head;
+    char emailWild[40];
+    int found = 0;
+    searchedEmail[strcspn(searchedEmail, "*")] = '\0';
+
+    while(w != NULL){
+        for(int i = 0; i < strlen(searchedEmail); i++){
+            emailWild[i] = w->email[i];
+        }
+        
+        emailWild[strlen(searchedEmail)] = '\0';
+        
+        if(strcmp(searchedEmail, emailWild) == 0){
+            found = 1;
+            printf("\nID Kontak: %s", w->contactid);
+            printf("\nNama: %s", w->name);
+            printf("\nUmur: %d", w->age);
+            printf("\nJenis Kelamin: %c", w->gender);
+            printf("\nNo Telepon: %s", w->telNo);
+            printf("\nEmail: %s\n", w->email);
+        }
+        
+        w = w->next;
+    }
+    
+    if(!found)
+        printf("Kontak tidak ditemukan.");
+}
+
+void displayData(ptrnode* head){
+    if(*head == NULL){
+        printf("Tidak ada data di dalam buku kontak.\n");
+        return;
+    }
+    
+    ptrnode tmp = *head;
+    while(tmp != NULL){
+        printf("\nID Kontak: %s", tmp->contactid);
+        printf("\nNama: %s", tmp->name);
+        tmp->name[strcspn(tmp->name, "\n")] = '\0';
+        printf("\nUmur: %d\n", tmp->age);
+        printf("Jenis Kelamin: %c\n", tmp->gender);
+        printf("No Telepon: %s\n", tmp->telNo);
+        printf("Email: %s\n", tmp->email);
+        tmp = tmp->next;
+    }
+}
+
+int main(){
+    ptrnode head = (ptrnode)malloc(sizeof(struct ContactBook));
+    head = NULL;
+    char idKontak[5];
+    char nama[50];
+    int umur;
+    char jeniskelamin;
+    char noTelp[13];
+    char email[40];
+    int menuChoice;
+    char appChoice;
+    char idDicari[5];
+    
+    do{
+        printf("\n[-----SELAMAT DATANG DI CONTACT BOOK------]\n\n");
+        printf("!!! DISCLAIMER !!!\nApabila saat menjalankan program ini Anda\n");
+        printf("tidak menemui kelanjutan program secara\nlangsung, mohon tekan");
+        printf(" tombol ENTER pada\nkeyboard Anda. Terima kasih!\n");
+        printf("(tekan tombol ENTER)\n");
+        getchar();
+        system("clear");
+        
+        printf("Menu:\n1. Tampilkan Kontak\n2. Masukkan Kontak\n3. Cari Kontak\n");
+        printf("4. Hapus Kontak\n5. Edit Kontak\n6. Urutkan Kontak\n7. Keluar\n");
+        printf("(Pilih 1-7)\n>> ");
+        scanf("%d", &menuChoice);
+        
+        system("clear");
+
+        switch(menuChoice){
+            case 1:
+                displayData(&head);
+                break;
+            case 2:
+                printf("Masukkan data kontak ke dalam buku kontak.\n");
+                char userInput = 'Y';
+                while(toupper(userInput) != 'N'){
+                    printf("ID Kontak (maks 4 digit): ");
+                    scanf("%s", idKontak);
+                    
+                    printf("Nama: ");
+                    getchar();
+                    fgets(nama, sizeof(nama), stdin);
+                    nama[strcspn(nama, "\n")] = '\0';
+                    
+                    printf("Umur (angka saja): ");
+                    scanf("%d", &umur);
+                    getchar();
+                    printf("Jenis Kelamin (P/L): ");
+                    scanf(" %c", &jeniskelamin);
+                    jeniskelamin = toupper(jeniskelamin);
+                    printf("No Telepon: ");
+                    scanf("%s", noTelp);
+                    printf("Email: ");
+                    scanf("%s", email);
+                    head = insertData(head, idKontak, nama, umur, jeniskelamin, noTelp, email);
+                    printf(">> Apakah Anda ingin menambah data lagi? (Y/N): ");
+                    scanf(" %c", &userInput);
+                    userInput = toupper(userInput);
+                    printf("\n");
+                }
+                break;
+            case 3:
+                int searchChoice;
+                char wildcardOrNo;
+                char namaDicari[50];
+                char noTelpDicari[13];
+                char emailDicari[40];
+                if(head == NULL){
+                    printf("Tidak ada data dalam buku kontak.\n");
+                    break;
+                }
+                
+                printf("\nPilih atribut sebagai dasar pencarian kontak:\n");
+                printf("1. Nama\n2. No Telepon\n3. Email\n(Pilih 1-3)\n>> ");
+                scanf("%d", &searchChoice);
+                system("clear");
+                
+                switch(searchChoice){
+                    case 1:
+                        printf("\nApakah Anda ingin melakukan pencarian dengan wildcard (*)? (Y/N)");
+                        printf("\n>> ");
+                        scanf(" %c", &wildcardOrNo);
+                        getchar();
+                        wildcardOrNo = toupper(wildcardOrNo);
+                        
+                        
+                        if(wildcardOrNo == 'Y'){
+                            printf("\nMasukkan nama yang ingin dicari: ");
+                            scanf("%s", namaDicari);
+                            namaDicari[strcspn(namaDicari, "\n")] = '\0';
+                            
+                            while(namaDicari[strlen(namaDicari)-1] != '*'){
+                                printf("Input tidak valid. Mohon tambahkan '*' di akhir: ");
+                                scanf("%s", namaDicari);
+                                namaDicari[strcspn(namaDicari, "\n")] = '\0';
+                            }
+
+                            system("clear");
+                            
+                            wildcardSearchName(&head, namaDicari);
+                            printf("\n");
+                        }
+                        else if(wildcardOrNo == 'N'){
+                            printf("\nMasukkan nama yang ingin dicari: ");
+                            fgets(namaDicari, sizeof(namaDicari), stdin);
+                            namaDicari[strcspn(namaDicari, "\n")] = '\0';
+                            system("clear");
+                            searchDatabyName(&head, namaDicari);
+                        }
+                        getchar();
+                        
+                        break;
+                    case 2:
+                        printf("\nApakah Anda ingin melakukan pencarian dengan wildcard (*)? (Y/N)");
+                        printf("\n>> ");
+                        scanf(" %c", &wildcardOrNo);
+                        getchar();
+                        wildcardOrNo = toupper(wildcardOrNo);
+                        
+                        if(wildcardOrNo == 'Y'){
+                            printf("\nMasukkan nomor telepon yang ingin dicari: ");
+                            scanf("%s", noTelpDicari);
+                            noTelpDicari[strcspn(noTelpDicari, "\n")] = '\0';
+                            
+                            while(noTelpDicari[strlen(noTelpDicari)-1] != '*'){
+                                printf("Input tidak valid. Mohon tambahkan '*' di akhir: ");
+                                scanf("%s", noTelpDicari);
+                                noTelpDicari[strcspn(noTelpDicari, "\n")] = '\0';
+                            }
+                            
+                            system("clear");
+                            wildcardSearchTelNo(&head, noTelpDicari);
+                            printf("\n");
+                        }
+                        else if(wildcardOrNo == 'N'){
+                            printf("\nMasukkan nomor telepon yang ingin dicari: ");
+                            scanf("%s", noTelpDicari);
+                            system("clear");
+                            searchDatabyTelNo(&head, noTelpDicari);
+                        }
+                        
+                        break;
+                    case 3:
+                        printf("\nApakah Anda ingin melakukan pencarian dengan wildcard (*)? (Y/N)");
+                        printf("\n>> ");
+                        scanf(" %c", &wildcardOrNo);
+                        getchar();
+                        wildcardOrNo = toupper(wildcardOrNo);
+                        
+                        if(wildcardOrNo == 'Y'){
+                            printf("\nMasukkan email yang ingin dicari: ");
+                            scanf("%s", emailDicari);
+                            emailDicari[strcspn(emailDicari, "\n")] = '\0';
+                            
+                            while(emailDicari[strlen(emailDicari)-1] != '*'){
+                                printf("Input tidak valid. Mohon tambahkan '*' di akhir: ");
+                                scanf("%s", emailDicari);
+                                emailDicari[strcspn(emailDicari, "\n")] = '\0';
+                            }
+                            
+                            system("clear");
+                            
+                            wildcardSearchEmail(&head, emailDicari);
+                            printf("\n");
+                        }
+                        else if(wildcardOrNo == 'N'){
+                            printf("\nMasukkan email yang ingin dicari: ");
+                            scanf(" %s", emailDicari);
+                            system("clear");
+                            searchDatabyEmail(&head, emailDicari);
+                        }
+                        
+                        break;
+                    default:
+                        printf("\nPilihan Anda tidak valid.\n");
+                }
+                
+                
+                break;
+            case 4:
+                int deleteChoice;
+                printf("\nPilih atribut sebagai dasar penghapusan kontak:\n");
+                printf("1. ID Kontak\n2. Nama\n3. Nomor Telepon\n4. Email\n(Pilih 1-4)\n>> ");
+                scanf("%d", &deleteChoice);
+                
+                switch(deleteChoice){
+                    case 1:
+                        printf("\nMasukkan ID dari kontak yang ingin dihapus: ");
+                        getchar();
+                        scanf("%s", idDicari);
+                        system("clear");
+                        deleteDataById(&head, idDicari);
+                        break;
+                    case 2:
+                        printf("\nMasukkan nama dari kontak yang ingin dihapus: ");
+                        getchar();
+                        fgets(namaDicari, sizeof(namaDicari), stdin);
+                        system("clear");
+                        deleteDataByName(&head, namaDicari);
+                        break;
+                    case 3:
+                        printf("\nMasukkan nomor telepon dari kontak yang ingin dihapus: ");
+                        getchar();
+                        scanf("%s", noTelpDicari);
+                        system("clear");
+                        deleteDataByTelNo(&head, noTelpDicari);
+                        break;
+                    case 4:
+                        printf("\nMasukkan email dari kontak yang ingin dihapus: ");
+                        getchar();
+                        scanf("%s", emailDicari);
+                        system("clear");
+                        deleteDataByEmail(&head, emailDicari);
+                        break;
+                    default:
+                        printf("\nPilihan Anda tidak valid.\n");
+                }
+                break;
+            case 5:
+                int editChoice;
+                char nameEdited[50];
+                char newName[50];
+                int ageEdited;
+                int newAge;
+                char genderEdited;
+                char newGender;
+                char telNoEdited[13];
+                char newTelNo[13];
+                char emailEdited[40];
+                char newEmail[40];
+                char idToEdit[5];
+                
+                printf("Masukkan ID kontak yang ingin Anda edit: ");
+                scanf("%s", idToEdit);
+                ptrnode tmp = head;
+                idToEdit[strcspn(idToEdit, "\n")] = '\0';
+                tmp->contactid[strcspn(tmp->contactid, "\n")] = '\0';
+                
+                while(tmp != NULL){
+                    if(strcmp(tmp->contactid, idToEdit) == 0){
+                        printf("Kontak ditemukan! ");
+                        break;
+                    }
+                    else
+                        tmp = tmp->next;
+                }
+                
+                printf("Atribut apa yang ingin Anda edit?\n");
+                printf("1. Nama\n2. Umur\n3. Jenis Kelamin\n4. No Telepon\n5. Email");
+                printf("\n(Pilih 1-5)\n>> ");
+                scanf(" %d", &editChoice);
+                getchar();
+                
+                system("clear");
+                
+                switch(editChoice){
+                    case 1:
+                        printf("Masukkan nama yang baru: ");
+                        fgets(newName, sizeof(newName), stdin);
+                        newName[strcspn(newName, "\n")] = '\0';
+                        getchar();
+                        editName(&tmp, newName);
+                        break;
+                    case 2:
+                        printf("Masukkan umur yang baru: ");
+                        scanf(" %d", &newAge);
+                        editAge(&tmp, newAge);
+                        break;
+                    case 3:
+                        printf("Masukkan jenis kelamin yang baru: ");
+                        scanf(" %c", &newGender);
+                        getchar();
+                        editGender(&tmp, toupper(newGender));
+                        break;
+                    case 4:
+                        printf("Masukkan nomor telepon yang baru: ");
+                        scanf(" %s", newTelNo);
+                        editTelNo(&tmp, newTelNo);
+                        break;
+                    case 5:
+                        printf("Masukkan email yang baru: ");
+                        scanf(" %s", newEmail);
+                        editEmail(&tmp, newEmail);
+                        break;
+                }
+                break;
+            case 6:
+                int sortChoice;
+                int sortpref;
+                printf("\nBagaimana urutan kontak yang Anda inginkan?\n1. Menaik (L dahulu untuk Jenis Kelamin)");
+                printf("\n2. Menurun (P dahulu untuk Jenis Kelamin)\n>> ");
+                scanf("%d", &sortpref);
+                
+                while(sortpref != 1 && sortpref != 2){
+                    printf("Pilihan Anda tidak valid. Silakan pilih ulang.\n>> ");
+                    scanf("%d", &sortpref);
+                }
+                
+                system("clear");
+                
+                printf("\nPilih atribut sebagai dasar pengurutan kontak:\n");
+                printf("1. ID Kontak\n2. Nama\n3. Umur\n4. Jenis Kelamin\n");
+                printf("5. No Telepon\n6. Email\n(Pilih 1-6)\n>> ");
+                scanf("%d", &sortChoice);
+                
+                system("clear");
+                
+                switch(sortChoice){
+                    case 1:
+                        if(sortpref == 1)
+                            insertionSortByContactIDAsc(&head);
+                        else if(sortpref == 2)
+                            insertionSortByContactIDDesc(&head);
+                        break;
+                    case 2:
+                        if(sortpref == 1)
+                            insertionSortByNameAsc(&head);
+                        else if(sortpref == 2)
+                            insertionSortByNameDesc(&head);
+                        break;
+                    case 3:
+                        if(sortpref == 1)
+                            insertionSortByAgeAsc(&head);
+                        else if(sortpref == 2)
+                            insertionSortByAgeDesc(&head);
+                        break;
+                    case 4:
+                        if(sortpref == 1)
+                            insertionSortByGenderAsc(&head);
+                        else if(sortpref == 2)
+                            insertionSortByGenderDesc(&head);
+                        break;
+                    case 5:
+                        if(sortpref == 1)
+                            insertionSortByTelNoAsc(&head);
+                        else if(sortpref == 2)
+                            insertionSortByTelNoDesc(&head);
+                        break;
+                    case 6:
+                        if(sortpref == 1)
+                            insertionSortByEmailAsc(&head);
+                        else if(sortpref == 2)
+                            insertionSortByEmailDesc(&head);
+                        break;
+                    
+                }
+                break;
+            case 7:
+                printf("Sampai jumpa di lain waktu!");
+                exit(0);
+                break;
+            default:
+                printf("\nPilihan Anda tidak valid.");
+                break;
+        }
+        
+        getchar();
+        printf("\nApakah Anda masih ingin menggunakan aplikasi Contact Book? (Y/N)");
+        printf("\n>> ");
+        scanf("%c", &appChoice);
+        printf("\n");
+        system("clear");
+    } while(toupper(appChoice) != 'N');
+    
+    printf("Sampai jumpa di lain waktu!");
+}
+
+
+
+
+
+
+
+
+
